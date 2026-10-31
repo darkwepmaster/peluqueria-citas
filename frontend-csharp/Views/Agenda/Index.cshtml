@@ -1,0 +1,18 @@
+@model List<CitaDto>
+@{ ViewData["Title"] = "Mi agenda"; var fecha = (DateOnly)ViewBag.Fecha; var f = fecha.ToString("yyyy-MM-dd"); }
+<h1>Mi agenda</h1>
+<form method="get" class="filtros"><input type="date" name="fecha" value="@f" class="in" /><button class="btn s" type="submit">Ver día</button></form>
+<p class="sub">@Fmt.FechaLarga(fecha) · @Model.Count citas</p>
+@if (!Model.Any()) { <p class="sub">No tienes citas este día.</p> }
+@foreach (var c in Model)
+{
+    <div class="card fila">
+        <div class="fila"><b class="hora">@Fmt.Hora(c.HoraInicio)</b><div><b>@c.ClienteNombre</b><p class="sub">@c.Descripcion · @((int)(c.HoraFin.ToTimeSpan() - c.HoraInicio.ToTimeSpan()).TotalMinutes) min</p></div></div>
+        <div class="fila"><partial name="_Estado" model="c.Estado" />
+        @if (c.EsActiva)
+        {
+            <form asp-action="Cerrar" method="post"><input type="hidden" name="id" value="@c.Id" /><input type="hidden" name="fecha" value="@f" /><input type="hidden" name="asistio" value="true" /><button class="btn s">Marcar atendida</button></form>
+            <form asp-action="Cerrar" method="post"><input type="hidden" name="id" value="@c.Id" /><input type="hidden" name="fecha" value="@f" /><input type="hidden" name="asistio" value="false" /><button class="btn o s">Ausente</button></form>
+        }</div>
+    </div>
+}

@@ -1,0 +1,19 @@
+@model ConfirmarVm
+@{ ViewData["Title"] = "Confirmar cita"; var f = Model.Fecha.ToString("yyyy-MM-dd"); }
+<div class="bc"><a asp-controller="Catalogo" asp-action="Index">Servicios</a> › <b>Confirmar</b></div>
+<h1>Confirma tu cita</h1>
+<partial name="_Pasos" model="4" />
+<div class="card ancho">
+    <div class="fila"><div><h3>@Model.Servicio.Nombre</h3><p class="sub">con @Model.Estilista.Nombre</p></div><partial name="_Estado" model='"PENDIENTE"' /></div>
+    <table>
+        <tr><td>Fecha</td><td><b>@Fmt.FechaLarga(Model.Fecha)</b></td></tr>
+        <tr><td>Hora</td><td><b>@Fmt.Hora(Model.Hora) – @Fmt.Hora(Model.Fin)</b></td></tr>
+        <tr><td>Total a pagar en el local</td><td><b class="precio">@Fmt.Dinero(Model.Servicio.Precio)</b></td></tr>
+    </table>
+    <form asp-action="Crear" method="post" class="acciones">
+        <input type="hidden" name="servicioId" value="@Model.Servicio.Id" /><input type="hidden" name="estilistaId" value="@Model.Estilista.Id" />
+        <input type="hidden" name="fecha" value="@f" /><input type="hidden" name="hora" value="@Fmt.Hora(Model.Hora)" />
+        <a class="btn o" asp-action="Horario" asp-route-servicioId="@Model.Servicio.Id" asp-route-estilistaId="@Model.Estilista.Id" asp-route-fecha="@f">Atrás</a>
+        <button class="btn" type="submit">Confirmar cita</button>
+    </form>
+</div>

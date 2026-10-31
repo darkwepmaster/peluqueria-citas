@@ -1,0 +1,19 @@
+@model RegistroVm
+@{ ViewData["Title"] = "Crear cuenta"; }
+<div class="card centro ancho">
+    <h1>Crear cuenta</h1>
+    <p class="sub">Regístrate para reservar tus citas en línea</p>
+    <form asp-action="Registro" method="post">
+        <div class="grid g2">
+            <div><label>Nombres</label><input asp-for="Nombres" class="in" /><span asp-validation-for="Nombres" class="val"></span></div>
+            <div><label>Apellidos</label><input asp-for="Apellidos" class="in" /><span asp-validation-for="Apellidos" class="val"></span></div>
+            <div><label>Correo electrónico</label><input asp-for="Email" class="in" /><span asp-validation-for="Email" class="val"></span></div>
+            <div><label>Teléfono / WhatsApp</label><input asp-for="Telefono" class="in" /><span asp-validation-for="Telefono" class="val"></span></div>
+            <div><label>Contraseña (mínimo 8)</label><input asp-for="Password" type="password" class="in" /><span asp-validation-for="Password" class="val"></span></div>
+            <div><label>Confirmar contraseña</label><input asp-for="Confirmar" type="password" class="in" /><span asp-validation-for="Confirmar" class="val"></span></div>
+        </div>
+        <p class="chk"><label><input asp-for="AceptaWhatsapp" /> Recibir avisos por WhatsApp</label>
+            <label><input asp-for="AceptaCorreo" /> Recibir avisos por correo</label></p>
+        <button class="btn bloque" type="submit">Registrarme</button>
+    </form>
+</div>

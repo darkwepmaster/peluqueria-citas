@@ -1,0 +1,27 @@
+@model HorarioVm
+@{ ViewData["Title"] = "Reservar: horario"; var f = Model.Fecha.ToString("yyyy-MM-dd"); }
+<div class="bc"><a asp-controller="Catalogo" asp-action="Index">Servicios</a> › <b>Reservar cita</b></div>
+<h1>Elige fecha y hora</h1>
+<p class="sub">Solo se muestran horarios libres de @Model.Estilista.Nombre</p>
+<partial name="_Pasos" model="3" />
+<div class="grid dos-col">
+    <div class="card">
+        <div class="dias">
+        @foreach (var d in Model.Dias)
+        {
+            <a class="dia @(d == Model.Fecha ? "on" : "")" asp-action="Horario" asp-route-servicioId="@Model.Servicio.Id" asp-route-estilistaId="@Model.Estilista.Id" asp-route-fecha="@d.ToString("yyyy-MM-dd")">
+                <small>@Fmt.Fecha(d).Split(' ')[0]</small><b>@d.Day</b></a>
+        }
+        </div>
+        <h3>Horarios disponibles · @Fmt.FechaLarga(Model.Fecha)</h3>
+        @if (!Model.Libres.Any()) { <p class="sub">No hay horarios libres este día. Prueba con otra fecha.</p> }
+        <div class="grid g3">
+        @foreach (var h in Model.Libres)
+        {
+            <a class="slot" asp-action="Confirmar" asp-route-servicioId="@Model.Servicio.Id" asp-route-estilistaId="@Model.Estilista.Id" asp-route-fecha="@f" asp-route-hora="@Fmt.Hora(h)">@Fmt.Hora(h)</a>
+        }
+        </div>
+    </div>
+    <div class="card"><h3>Resumen</h3><p class="sub">Servicio</p><b>@Model.Servicio.Nombre</b><p class="sub">Estilista</p><b>@Model.Estilista.Nombre</b>
+        <hr /><div class="fila"><b>Total</b><b class="precio">@Fmt.Dinero(Model.Servicio.Precio)</b></div></div>
+</div>
