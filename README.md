@@ -6,9 +6,9 @@ Aplicación de **dos partes** que se comunican por HTTP/JSON:
 
 | Carpeta | Tecnología | Rol |
 |---|---|---|
-| `backend-java/` | **Java 17 · Spring Boot 3** · JPA · Spring Security (JWT) · Guava · Apache POI · Apache Commons · Logback | API REST: reglas de negocio, seguridad, datos, reportes y exportación |
-| `frontend-csharp/` | **C# · ASP.NET Core 8 MVC (Razor)** | Interfaz web (cliente, recepción y estilista) que consume la API |
-| `recordatorios-csharp/` | **C# · .NET 8 Worker Service** | Despacha por correo/WhatsApp las notificaciones vencidas |
+| `backend-java/` | **Java 24 · Spring Boot 3.5** · JPA · Spring Security (JWT) · Guava · Apache POI · Apache Commons · Logback | API REST: reglas de negocio, seguridad, datos, reportes y exportación |
+| `frontend-csharp/` | **C# · ASP.NET Core 9 MVC (Razor)** | Interfaz web (cliente, recepción y estilista) que consume la API |
+| `recordatorios-csharp/` | **C# · .NET 9 Worker Service** | Despacha por correo/WhatsApp las notificaciones vencidas |
 | `tests-csharp/` | xUnit | Pruebas del cliente de la API y de los formatos |
 | `db/` | SQL | Diseño físico de referencia (MySQL 8) |
 | `docs/` | Markdown | Arquitectura y guía de Git/GitHub |
@@ -16,7 +16,7 @@ Aplicación de **dos partes** que se comunican por HTTP/JSON:
 > Proporción de código (líneas no vacías de `.java`, `.cs` y `.cshtml`): ver `docs/ARQUITECTURA.md`. **Java es la mayor parte (≥ 50 %)**, como exige el curso.
 
 ## Requisitos
-JDK 17+, Maven 3.9+, .NET SDK 8. (MySQL 8 es opcional: por defecto la API usa H2 en memoria.)
+JDK 24, Maven 3.9+ (probado con 3.10.0), .NET SDK 9 (9.0.318) y Git 2.x. (MySQL 8 es opcional: por defecto la API usa H2 en memoria.)
 
 ## Ejecución rápida (3 terminales)
 ```bash
