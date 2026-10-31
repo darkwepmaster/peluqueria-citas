@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — Bella Estilo</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+<nav class="nav">
+    <a class="logo" asp-controller="Catalogo" asp-action="Index"><i>B</i>Bella Estilo</a>
+    @if (User.IsInRole("CLIENTE"))
+    {
+        <a asp-controller="Catalogo" asp-action="Index">Servicios</a>
+        <a asp-controller="MisCitas" asp-action="Index">Mis citas</a>
+        <a asp-controller="Notificaciones" asp-action="Index">Notificaciones</a>
+    }
+    else if (User.IsInRole("ADMINISTRADOR"))
+    {
+        <a asp-controller="Admin" asp-action="Panel">Panel</a>
+        <a asp-controller="Admin" asp-action="Citas">Citas</a>
+        <a asp-controller="Admin" asp-action="Servicios">Servicios</a>
+        <a asp-controller="Admin" asp-action="Estilistas">Estilistas</a>
+        <a asp-controller="Admin" asp-action="Clientes">Clientes</a>
+        <a asp-controller="Admin" asp-action="Reportes">Reportes</a>
+    }
+    else if (User.IsInRole("ESTILISTA")) { <a asp-controller="Agenda" asp-action="Index">Mi agenda</a> }
+    else { <a asp-controller="Catalogo" asp-action="Index">Servicios</a> }
+    <span class="sp"></span>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <span class="user">@User.Identity.Name</span>
+        <a asp-controller="Cuenta" asp-action="Salir">Cerrar sesión</a>
+    }
+    else
+    {
+        <a asp-controller="Cuenta" asp-action="Login">Iniciar sesión</a>
+        <a class="btn s" asp-controller="Cuenta" asp-action="Registro">Registrarme</a>
+    }
+</nav>
+<main class="wrap">
+    @if (TempData["Ok"] is string ok) { <div class="alerta ok">@ok</div> }
+    @if (TempData["Error"] is string err) { <div class="alerta error">@err</div> }
+    @RenderBody()
+</main>
+</body>
+</html>

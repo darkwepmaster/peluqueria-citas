@@ -1,0 +1,9 @@
+@model int
+@{ var pasos = new[] { "Servicio", "Estilista", "Horario", "Confirmar" }; }
+<div class="steps">
+    @for (var i = 1; i <= pasos.Length; i++)
+    {
+        <div class="st @(i < Model ? "ok" : i == Model ? "on" : "")"><b>@(i < Model ? "✓" : i.ToString())</b>@pasos[i - 1]</div>
+        @if (i < pasos.Length) { <div class="ln @(i < Model ? "ok" : "")"></div> }
+    }
+</div>

@@ -1,0 +1,36 @@
+@model List<EstilistaDto>
+@{ ViewData["Title"] = "Estilistas y horarios"; var sel = ViewBag.Seleccionado as EstilistaDto; }
+<h1>Estilistas y horarios</h1>
+<p class="sub">Registro del personal y su disponibilidad semanal</p>
+<div class="grid dos-col">
+<div>
+    <div class="card sin-pad"><table>
+        <tr><th>Estilista</th><th>Especialidad</th><th>Estado</th><th></th></tr>
+        @foreach (var e in Model)
+        {
+            <tr><td><b>@e.Nombre</b></td><td>@e.Especialidad</td><td><span class="tag @(e.Activo ? "t-con" : "t-can")">@(e.Activo ? "Activo" : "Inactivo")</span></td>
+                <td><a asp-action="Estilistas" asp-route-horarioDe="@e.Id">Horario</a></td></tr>
+        }
+    </table></div>
+    <div class="card"><h3>Nuevo estilista</h3>
+        <form asp-action="CrearEstilista" method="post"><div class="grid g2">
+            <div><label>Nombres</label><input name="nombres" class="in" required /></div><div><label>Apellidos</label><input name="apellidos" class="in" required /></div>
+            <div><label>Correo</label><input name="email" type="email" class="in" required /></div><div><label>Teléfono</label><input name="telefono" class="in" required /></div>
+            <div><label>Especialidad</label><input name="especialidad" class="in" required /></div><div><label>Contraseña inicial (mín. 8)</label><input name="password" type="password" minlength="8" class="in" required /></div></div>
+            <button class="btn" type="submit">Registrar estilista</button></form></div>
+</div>
+<div class="card">
+    @if (sel == null) { <h3>Horario semanal</h3><p class="sub">Elige «Horario» en un estilista para editarlo.</p> }
+    else
+    {
+        <h3>Horario de @sel.Nombre</h3><p class="sub">Deja vacío el día en que no atiende.</p>
+        <form asp-action="GuardarHorario" method="post"><input type="hidden" name="id" value="@sel.Id" />
+        <table><tr><th>Día</th><th>Inicio</th><th>Fin</th></tr>
+        @for (var d = 1; d <= 7; d++)
+        {
+            var h = sel.Horarios.FirstOrDefault(x => x.DiaSemana == d);
+            <tr><td>@Fmt.Dia(d)</td><td><input type="time" name="inicio" class="in" value="@(h == null ? "" : Fmt.Hora(h.HoraInicio))" /></td><td><input type="time" name="fin" class="in" value="@(h == null ? "" : Fmt.Hora(h.HoraFin))" /></td></tr>
+        }
+        </table><button class="btn s" type="submit">Guardar horario</button></form>
+    }
+</div></div>

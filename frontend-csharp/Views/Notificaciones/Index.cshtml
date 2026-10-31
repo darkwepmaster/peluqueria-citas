@@ -1,0 +1,13 @@
+@model List<NotificacionDto>
+@{ ViewData["Title"] = "Notificaciones"; }
+<h1>Notificaciones</h1>
+<p class="sub">Historial de avisos sobre tus citas. Los canales se eligen al registrarte.</p>
+@if (!Model.Any()) { <p class="sub">Aún no tienes notificaciones.</p> }
+@foreach (var n in Model)
+{
+    <div class="card fila">
+        <div><b>@(n.Tipo switch { "RECORDATORIO" => "Recordatorio", "CONFIRMACION" => "Cita confirmada", "CANCELACION" => "Cita cancelada", "REPROGRAMACION" => "Cita reprogramada", _ => "Cita registrada" })</b>
+            <p class="sub">@n.Mensaje</p></div>
+        <div class="derecha"><small>@n.FechaProgramada.ToString("dd/MM/yyyy HH:mm")</small><br /><span class="tag t-at">@n.Canal</span> <span class="tag @(n.EstadoEnvio == "ENVIADA" ? "t-con" : n.EstadoEnvio == "FALLIDA" ? "t-can" : "t-pen")">@n.EstadoEnvio.ToLower()</span></div>
+    </div>
+}

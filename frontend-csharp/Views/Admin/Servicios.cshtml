@@ -1,0 +1,29 @@
+@model List<ServicioDto>
+@{ ViewData["Title"] = "Catálogo de servicios"; var ed = ViewBag.Editar as ServicioDto; }
+<h1>Catálogo de servicios</h1>
+<p class="sub">Gestiona precios, duración y disponibilidad</p>
+<div class="grid dos-col">
+<div class="card sin-pad"><table>
+    <tr><th>Servicio</th><th>Categoría</th><th>Duración</th><th>Precio</th><th>Estado</th><th></th></tr>
+    @foreach (var s in Model)
+    {
+        <tr><td><b>@s.Nombre</b></td><td>@s.Categoria</td><td>@s.DuracionMin min</td><td>@Fmt.Dinero(s.Precio)</td>
+            <td><span class="tag @(s.Activo ? "t-con" : "t-can")">@(s.Activo ? "Activo" : "Inactivo")</span></td>
+            <td><a asp-action="Servicios" asp-route-editar="@s.Id">Editar</a></td></tr>
+    }
+</table></div>
+<div class="card">
+    <h3>@(ed == null ? "Nuevo servicio" : "Editar servicio")</h3>
+    <form asp-action="GuardarServicio" method="post">
+        @if (ed != null) { <input type="hidden" name="id" value="@ed.Id" /> }
+        <label>Nombre</label><input name="nombre" class="in" required value="@ed?.Nombre" />
+        <label>Descripción</label><input name="descripcion" class="in" value="@ed?.Descripcion" />
+        <label>Categoría</label><input name="categoria" class="in" required value="@ed?.Categoria" list="cats" />
+        <datalist id="cats">@foreach (var c in Model.Select(m => m.Categoria).Distinct()) { <option value="@c" /> }</datalist>
+        <div class="grid g2"><div><label>Duración (min)</label><input name="duracionMin" type="number" min="5" step="5" class="in" required value="@(ed?.DuracionMin ?? 30)" /></div>
+        <div><label>Precio (S/)</label><input name="precio" type="number" min="0" step="0.01" class="in" required value="@((ed?.Precio ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture))" /></div></div>
+        <p class="chk"><label><input type="checkbox" name="activo" value="true" @(ed == null || ed.Activo ? "checked" : "") /> Visible en el catálogo</label></p>
+        <input type="hidden" name="activo" value="false" />
+        <button class="btn" type="submit">Guardar</button>
+    </form>
+</div></div>
