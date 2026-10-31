@@ -1,0 +1,6 @@
+@model string
+@{
+    var clase = Model switch { "CONFIRMADA" => "t-con", "CANCELADA" => "t-can", "ATENDIDA" => "t-at", "AUSENTE" => "t-am", _ => "t-pen" };
+    var texto = char.ToUpper(Model[0]) + Model[1..].ToLower();
+}
+<span class="tag @clase">@texto</span>

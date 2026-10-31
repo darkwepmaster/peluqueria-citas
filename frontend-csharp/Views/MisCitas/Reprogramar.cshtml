@@ -1,0 +1,23 @@
+@model ReprogramarVm
+@{ ViewData["Title"] = "Reprogramar cita"; var f = Model.Fecha.ToString("yyyy-MM-dd"); }
+<h1>Reprogramar cita</h1>
+<p class="sub">@Model.Cita.Descripcion con @Model.Cita.EstilistaNombre · actual: @Fmt.Fecha(Model.Cita.Fecha) @Fmt.Hora(Model.Cita.HoraInicio)</p>
+<div class="card">
+    <div class="dias">
+    @foreach (var d in Model.Dias)
+    {
+        <a class="dia @(d == Model.Fecha ? "on" : "")" asp-action="Reprogramar" asp-route-id="@Model.Cita.Id" asp-route-fecha="@d.ToString("yyyy-MM-dd")"><small>@Fmt.Fecha(d).Split(' ')[0]</small><b>@d.Day</b></a>
+    }
+    </div>
+    <h3>Horarios disponibles · @Fmt.FechaLarga(Model.Fecha)</h3>
+    @if (!Model.Libres.Any()) { <p class="sub">No hay horarios libres este día.</p> }
+    <div class="grid g4">
+    @foreach (var h in Model.Libres)
+    {
+        <form asp-action="Reprogramar" method="post">
+            <input type="hidden" name="id" value="@Model.Cita.Id" /><input type="hidden" name="fecha" value="@f" /><input type="hidden" name="hora" value="@Fmt.Hora(h)" />
+            <button class="slot bloque" type="submit">@Fmt.Hora(h)</button>
+        </form>
+    }
+    </div>
+</div>

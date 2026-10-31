@@ -1,0 +1,21 @@
+@model List<EstilistaDto>
+@{ ViewData["Title"] = "Reservar: estilista"; var s = (ServicioDto)ViewBag.Servicio; }
+<div class="bc"><a asp-controller="Catalogo" asp-action="Index">Servicios</a> › <b>Reservar cita</b></div>
+<h1>Nueva reserva</h1>
+<partial name="_Pasos" model="2" />
+<div class="grid dos-col">
+    <div>
+        <h3>Elige tu estilista para @s.Nombre</h3>
+        <div class="grid g3">
+        @foreach (var e in Model)
+        {
+            <a class="card centrado enlace" asp-action="Horario" asp-route-servicioId="@s.Id" asp-route-estilistaId="@e.Id">
+                <div class="av grande">@string.Concat(e.Nombre.Split(' ').Take(2).Select(p => p[0]))</div>
+                <b>@e.Nombre</b><p class="sub">@e.Especialidad</p>
+            </a>
+        }
+        </div>
+    </div>
+    <div class="card"><h3>Resumen</h3><p class="sub">Servicio</p><b>@s.Nombre</b><p class="sub">Duración</p><b>@s.DuracionMin minutos</b>
+        <hr /><div class="fila"><b>Total</b><b class="precio">@Fmt.Dinero(s.Precio)</b></div></div>
+</div>

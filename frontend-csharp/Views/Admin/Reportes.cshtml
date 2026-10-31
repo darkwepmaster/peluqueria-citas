@@ -1,0 +1,27 @@
+@model ReporteVm
+@{ ViewData["Title"] = "Reportes"; var r = Model.Citas!; double Pct(long v, long max) => max == 0 ? 0 : Math.Round(v * 100.0 / max); string D = Model.Desde.ToString("yyyy-MM-dd"), H = Model.Hasta.ToString("yyyy-MM-dd"); }
+<h1>Reportes de gestión</h1>
+<form method="get" class="filtros">
+    Desde <input type="date" name="desde" class="in" value="@D" /> Hasta <input type="date" name="hasta" class="in" value="@H" />
+    <button class="btn s" type="submit">Consultar</button>
+    <a class="btn o s" asp-action="Exportar" asp-route-desde="@D" asp-route-hasta="@H" asp-route-formato="xlsx">Exportar a Excel</a>
+    <a class="btn o s" asp-action="Exportar" asp-route-desde="@D" asp-route-hasta="@H" asp-route-formato="csv">Exportar a CSV</a>
+    <button class="btn o s" type="button" onclick="window.print()">Imprimir / PDF</button>
+</form>
+<div class="grid g4">
+    <div class="card kpi"><span>Total de citas</span><b>@r.Total</b></div><div class="card kpi"><span>Atendidas</span><b class="verde">@r.Atendidas</b></div>
+    <div class="card kpi"><span>Canceladas</span><b class="rojo">@r.Canceladas</b></div><div class="card kpi"><span>Ausencias</span><b class="ambar">@r.Ausentes</b></div>
+</div>
+<div class="grid g2">
+    <div class="card"><h3>R1 · Citas por estado</h3>
+        @foreach (var e in r.PorEstado) { <div class="barra"><div class="fila"><span>@e.Etiqueta.ToLower()</span><b>@e.Valor</b></div><div class="bt"><div class="bar" style="width:@Pct(e.Valor, r.PorEstado.Max(x => x.Valor)).ToString(System.Globalization.CultureInfo.InvariantCulture)%"></div></div></div> }</div>
+    <div class="card"><h3>R1 · Citas por semana</h3>
+        @foreach (var e in r.PorSemana) { <div class="barra"><div class="fila"><span>@e.Etiqueta</span><b>@e.Valor</b></div><div class="bt"><div class="bar" style="width:@Pct(e.Valor, r.PorSemana.Max(x => x.Valor)).ToString(System.Globalization.CultureInfo.InvariantCulture)%"></div></div></div> }
+        @if (!r.PorSemana.Any()) { <p class="sub">Sin datos en el período.</p> }</div>
+    <div class="card"><h3>R2 · Servicios más solicitados</h3>
+        @foreach (var s in Model.Servicios) { <div class="barra"><div class="fila"><span>@s.Etiqueta</span><b>@s.Valor</b></div><div class="bt"><div class="bar" style="width:@Pct(s.Valor, Model.Servicios.Max(x => x.Valor)).ToString(System.Globalization.CultureInfo.InvariantCulture)%"></div></div></div> }
+        @if (!Model.Servicios.Any()) { <p class="sub">Sin datos en el período.</p> }</div>
+    <div class="card"><h3>R3 · Ocupación por estilista</h3>
+        @foreach (var o in Model.Ocupacion) { <div class="barra"><div class="fila"><span>@o.Estilista</span><b>@o.Porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture) %</b></div><div class="bt"><div class="bar verde-bg" style="width:@o.Porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture)%"></div></div></div> }
+        <p class="sub">Ocupación = minutos atendidos ÷ minutos disponibles del horario.</p></div>
+</div>

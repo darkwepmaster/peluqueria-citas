@@ -1,0 +1,16 @@
+@model LoginVm
+@{ ViewData["Title"] = "Iniciar sesión"; }
+<div class="card centro">
+    <h1>Bienvenida de nuevo</h1>
+    <p class="sub">Ingresa a tu cuenta para gestionar tus citas</p>
+    <form asp-action="Login" method="post">
+        <label asp-for="Email">Correo electrónico</label>
+        <input asp-for="Email" class="in" autocomplete="username" />
+        <span asp-validation-for="Email" class="val"></span>
+        <label asp-for="Password">Contraseña</label>
+        <input asp-for="Password" type="password" class="in" autocomplete="current-password" />
+        <span asp-validation-for="Password" class="val"></span>
+        <button class="btn bloque" type="submit">Iniciar sesión</button>
+    </form>
+    <p class="sub centrado">¿Aún no tienes cuenta? <a asp-action="Registro">Regístrate</a></p>
+</div>

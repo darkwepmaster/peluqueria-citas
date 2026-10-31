@@ -1,0 +1,16 @@
+@model PanelVm
+@{ ViewData["Title"] = "Panel de recepción"; }
+<h1>Panel de recepción</h1>
+<p class="sub">@Fmt.FechaLarga(DateOnly.FromDateTime(DateTime.Today))</p>
+<div class="grid g4">
+    <div class="card kpi"><span>Citas hoy</span><b>@Model.Total</b></div>
+    <div class="card kpi"><span>Pendientes</span><b class="vino">@Model.Pendientes</b></div>
+    <div class="card kpi"><span>Atendidas</span><b class="verde">@Model.Atendidas</b></div>
+    <div class="card kpi"><span>Canceladas</span><b class="rojo">@Model.Canceladas</b></div>
+</div>
+<h3>Próximas citas del día</h3>
+<div class="card sin-pad"><table>
+    <tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Estilista</th><th>Estado</th></tr>
+    @foreach (var c in Model.Citas) { <tr><td>@Fmt.Hora(c.HoraInicio)</td><td><b>@c.ClienteNombre</b></td><td>@c.Descripcion</td><td>@c.EstilistaNombre</td><td><partial name="_Estado" model="c.Estado" /></td></tr> }
+    @if (!Model.Citas.Any()) { <tr><td colspan="5" class="sub">No hay citas registradas para hoy.</td></tr> }
+</table></div>

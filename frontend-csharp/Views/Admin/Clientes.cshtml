@@ -1,0 +1,9 @@
+@model List<ClienteDto>
+@{ ViewData["Title"] = "Clientes"; }
+<h1>Clientes registrados</h1>
+<p class="sub">Consulta de clientes e historial de atención</p>
+<form method="get" class="filtros"><input name="q" value="@ViewBag.Q" class="in" placeholder="Buscar por nombre o correo" /><button class="btn s" type="submit">Buscar</button></form>
+<div class="card sin-pad"><table>
+    <tr><th>Cliente</th><th>Teléfono</th><th>Correo</th><th>Última visita</th><th>Citas</th></tr>
+    @foreach (var c in Model) { <tr><td><b>@c.Nombre</b></td><td>@c.Telefono</td><td>@c.Email</td><td>@(c.UltimaVisita.HasValue ? Fmt.Fecha(c.UltimaVisita.Value) : "—")</td><td>@c.TotalCitas</td></tr> }
+</table></div>

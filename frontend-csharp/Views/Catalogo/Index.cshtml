@@ -1,0 +1,23 @@
+@model List<ServicioDto>
+@{ ViewData["Title"] = "Catálogo de servicios"; var cats = (List<string>)ViewBag.Categorias; }
+<h1>Catálogo de servicios</h1>
+<p class="sub">Elige el servicio que deseas reservar</p>
+<form method="get" class="filtros">
+    <input name="q" value="@ViewBag.Q" class="in" placeholder="Buscar corte, tinte, peinado…" />
+    <a class="chip @(string.IsNullOrEmpty(ViewBag.Categoria as string) ? "on" : "")" asp-action="Index">Todos</a>
+    @foreach (var c in cats) { <a class="chip @(ViewBag.Categoria as string == c ? "on" : "")" asp-action="Index" asp-route-categoria="@c">@c</a> }
+    <button class="btn s" type="submit">Buscar</button>
+</form>
+@if (!Model.Any()) { <p class="sub">No hay servicios que coincidan con la búsqueda.</p> }
+<div class="grid g3">
+@foreach (var s in Model)
+{
+    <div class="card">
+        <span class="tag t-pen">@s.Categoria</span>
+        <h3>@s.Nombre</h3>
+        <p class="sub">@s.Descripcion · @s.DuracionMin min</p>
+        <div class="fila"><b class="precio">@Fmt.Dinero(s.Precio)</b>
+            <a class="btn s" asp-controller="Reserva" asp-action="Index" asp-route-servicioId="@s.Id">Reservar</a></div>
+    </div>
+}
+</div>

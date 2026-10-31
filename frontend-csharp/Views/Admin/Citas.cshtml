@@ -1,0 +1,35 @@
+@model List<CitaDto>
+@{ ViewData["Title"] = "Gestión de citas"; var estado = ViewBag.Estado as string; var fecha = ViewBag.Fecha as DateOnly?; }
+<h1>Gestión de citas</h1>
+<p class="sub">Confirma, reprograma o cancela las citas del salón</p>
+<form method="get" class="filtros">
+    <input type="date" name="fecha" class="in" value="@(fecha?.ToString("yyyy-MM-dd"))" />
+    <select name="estado" class="in"><option value="">Todos los estados</option>
+        @foreach (var e in new[] { "PENDIENTE", "CONFIRMADA", "CANCELADA", "ATENDIDA", "AUSENTE" }) { <option value="@e" selected="@(estado == e)">@e.ToLower()</option> }
+    </select>
+    <button class="btn s" type="submit">Filtrar</button> <a class="btn o s" asp-action="Citas">Limpiar</a>
+</form>
+<div class="card sin-pad"><table>
+    <tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Estilista</th><th>Estado</th><th>Acciones</th></tr>
+    @foreach (var c in Model)
+    {
+        <tr><td>@Fmt.Fecha(c.Fecha) @Fmt.Hora(c.HoraInicio)</td><td><b>@c.ClienteNombre</b></td><td>@c.Descripcion</td><td>@c.EstilistaNombre</td>
+            <td><partial name="_Estado" model="c.Estado" /></td>
+            <td class="fila acc">
+            @if (c.Estado == "PENDIENTE")
+            {
+                <details class="modal-lite"><summary class="btn s">Confirmar</summary>
+                    <form asp-action="Confirmar" method="post" class="caja"><p>¿Confirmas la cita de <b>@c.ClienteNombre</b> para <b>@c.Descripcion</b> el @Fmt.Fecha(c.Fecha) a las @Fmt.Hora(c.HoraInicio)? Se notificará al cliente.</p>
+                    <input type="hidden" name="id" value="@c.Id" /><button class="btn s" type="submit">Sí, confirmar</button></form></details>
+            }
+            @if (c.EsActiva)
+            {
+                <a class="btn o s" asp-controller="MisCitas" asp-action="Reprogramar" asp-route-id="@c.Id">Reprogramar</a>
+                <details class="modal-lite"><summary class="btn d s">Cancelar</summary>
+                    <form asp-action="Cancelar" method="post" class="caja"><p><b>¿Cancelar la cita?</b></p><input type="hidden" name="id" value="@c.Id" />
+                    <label>Motivo</label><input name="motivo" class="in" maxlength="200" /><button class="btn d s" type="submit">Sí, cancelar</button></form></details>
+            }
+            </td></tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="6" class="sub">No hay citas con los filtros elegidos.</td></tr> }
+</table></div>
